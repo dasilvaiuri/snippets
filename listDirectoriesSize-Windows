@@ -1,0 +1,11 @@
+//Run into windows-powershell
+//it returns directories and its size without listing internal files (but summarize them)
+Get-ChildItem -Directory | ForEach-Object {
+$folder = $_
+$size = (Get-ChildItem -Path $folder.FullName -Recurse -File | Measure-Object -Property Length -Sum).Sum
+$sizeInGB = [math]::Round($size / 1GB, 2)
+[PSCustomObject]@{
+FolderName = $folder.FullName
+SizeInGB = “$sizeInGB GB”
+}
+} | Format-Table -AutoSize
